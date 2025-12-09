@@ -9,7 +9,7 @@
 
   "forwardPorts": [8080],
 
-  "postCreateCommand": "mvn -q -DskipTests clean install",
+  "postCreateCommand": "cd quarkus-getting-started && ./mvnw -q -DskipTests clean install",
 
   "remoteUser": "root",
 

@@ -19,9 +19,9 @@ public class ApplicationUserService {
     }
 
     @Transactional
-    public ApplicationUser create(ApplicationUser user) {
+    public ApplicationUser create(ApplicationUser user, String plainPassword) {
         // Hash the password before saving
-        String hashed = BCrypt.hashpw(user.getPasswordHash(), BCrypt.gensalt());
+        String hashed = BCrypt.hashpw(plainPassword, BCrypt.gensalt());
         user.setPasswordHash(hashed);
         repo.persist(user);
         return user;

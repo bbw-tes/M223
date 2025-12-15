@@ -9,6 +9,7 @@ import ch.zli.m223.services.StatusService;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.Consumes;
@@ -30,6 +31,7 @@ public class StatusController {
     }
 
     @POST
+    @Transactional
     public Status create(StatusDTO dto) {
         Status s = new Status();
         s.setName(dto.name);

@@ -1,10 +1,12 @@
 package ch.zli.m223.services;
 
+import java.util.List;
 import ch.zli.m223.models.ApplicationUser;
 import ch.zli.m223.repositories.ApplicationUserRepo;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import org.mindrot.jbcrypt.BCrypt;
 
 @ApplicationScoped
 public class ApplicationUserService {

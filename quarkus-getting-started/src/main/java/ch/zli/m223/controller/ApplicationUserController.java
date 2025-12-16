@@ -33,7 +33,7 @@ public class ApplicationUserController {
                 .toList();
     }
 
-    @POST
+   /*  @POST
     @Transactional
     public Response create(ApplicationUserDTO dto) {
         ApplicationUser user = new ApplicationUser();
@@ -45,5 +45,5 @@ public class ApplicationUserController {
         responseDto.username = created.getUsername();
 
         return Response.status(Response.Status.CREATED).entity(responseDto).build();
-    }
+    } */
 }

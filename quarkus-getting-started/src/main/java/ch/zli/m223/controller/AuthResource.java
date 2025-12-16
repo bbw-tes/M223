@@ -2,6 +2,7 @@ package ch.zli.m223.controller;
 
 import ch.zli.m223.repositories.ApplicationUserRepo;
 import ch.zli.m223.models.ApplicationUser;
+import ch.zli.m223.services.ApplicationUserService;
 import ch.zli.m223.auth.JwtUtils;
 import ch.zli.m223.dto.AuthDTO;
 import jakarta.ws.rs.*;
@@ -14,7 +15,27 @@ import org.mindrot.jbcrypt.BCrypt;
 public class AuthResource {
 
     @Inject
+    ApplicationUserService service;
+
+    @Inject
     ApplicationUserRepo userRepo;
+
+    @POST
+    @Path("/register")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response register(AuthDTO registerRequest) {
+        if (service.findByUsername(registerRequest.username) != null) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
+
+        ApplicationUser user = new ApplicationUser();
+        user.setUsername(registerRequest.username);
+        service.create(user, registerRequest.password);
+
+        return Response.ok("{\"message\":\"User created\"}").build();
+    }   
+
 
     @POST
     @Path("/login")
@@ -30,5 +51,5 @@ public class AuthResource {
         String token = JwtUtils.generateToken(user.getUsername());
         return Response.ok("{\"token\":\"" + token + "\"}").build();
     }
-    
+
 }

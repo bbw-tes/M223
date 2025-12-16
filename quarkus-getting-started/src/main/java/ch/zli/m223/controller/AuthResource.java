@@ -1,29 +1,34 @@
-package ch.zli.m223.main;
+package ch.zli.m223.controller;
 
-import ch.zli.m223.repositories.ApplicationUser;
+import ch.zli.m223.repositories.ApplicationUserRepo;
+import ch.zli.m223.models.ApplicationUser;
 import ch.zli.m223.auth.JwtUtils;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.core.Response;
+import ch.zli.m223.dto.AuthDTO;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import org.mindrot.jbcrypt.BCrypt;
 
-
-@Inject
-ApplicationUserRepo
 @Path("/auth")
 public class AuthResource {
 
+    @Inject
+    ApplicationUserRepo userRepo;
+
     @POST
     @Path("/login")
-    public Response login(@FormParam("username") String username, 
-                          @FormParam("password") String password) {
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response login(AuthDTO loginRequest) {
+        ApplicationUser user = userRepo.findByUsername(loginRequest.username);
 
-        // very simple check, replace with real user validation
-        if("testuser".equals(username) && "testpass".equals(password)) {
-            String token = JwtUtils.generateToken(username);
-            return Response.ok(token).build();
+        if (user == null || !BCrypt.checkpw(loginRequest.password, user.getPasswordHash())) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
-        return Response.status(Response.Status.UNAUTHORIZED).build();
+        String token = JwtUtils.generateToken(user.getUsername());
+        return Response.ok("{\"token\":\"" + token + "\"}").build();
     }
+    
 }

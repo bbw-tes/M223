@@ -6,5 +6,9 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 
 @ApplicationScoped
 public class ApplicationUserRepo implements PanacheRepository<ApplicationUser> {
-    //Panach
+
+    // Find a user by username 
+    public ApplicationUser findByUsername(String username) {
+        return find("username", username).firstResult();
+    }
 }
